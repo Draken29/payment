@@ -1,24 +1,56 @@
 <script>
-  function pay() {
+  export let token = ''; // التوكن القادم من App.svelte
+
+  async function pay() {
     const myApi = window.my;
     if (!myApi) {
       alert('بيئة الدفع غير جاهزة، تأكد أن miniapp تعمل داخل المتصفح الصحيح.');
       return;
     }
 
-    myApi.tradePay({
-      paymentUrl: 'https://www.wallet.com/cashier?orderId=xxxxxxx', // TODO: استبدلها بالـ redirectUrl من السيرفر
-      success: (res) => {
+    if (!token) {
+      myApi.alert({
+        content: 'لا يوجد توكن دفع صالح، أعد تسجيل الدخول.'
+      });
+      return;
+    }
+
+    try {
+      const res = await fetch('https://its.mouamle.space/api/payment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: token
+        }
+      });
+
+      const data = await res.json();
+
+      if (!data?.url) {
         myApi.alert({
-          content: JSON.stringify(res),
+          content: 'لم نحصل على رابط الدفع من السيرفر.'
         });
-      },
-      fail: (res) => {
-        myApi.alert({
-          content: JSON.stringify(res),
-        });
+        return;
       }
-    });
+
+      myApi.tradePay({
+        paymentUrl: data.url,
+        success: () => {
+          myApi.alert({
+            content: 'Payment successful'
+          });
+        },
+        fail: () => {
+          myApi.alert({
+            content: 'Payment failed'
+          });
+        }
+      });
+    } catch (err) {
+      myApi.alert({
+        content: 'Payment failed'
+      });
+    }
   }
 </script>
 
