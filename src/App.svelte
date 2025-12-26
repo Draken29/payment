@@ -81,17 +81,19 @@
   <h1 class="text-2xl font-bold text-white">Demo MiniApp</h1>
 </div>
 
-<div class="w-full h-screen flex flex-col items-center gap-4 justify-start p-4 mt-16">
-  <button class="bg-blue-500 text-white px-4 py-2 rounded-md" on:click={authenticate}>
-    Login
-  </button>
-  <button class="bg-blue-500 text-white px-4 py-2 rounded-md" on:click={copyAuthCode}>
-    Copy Auth Code
-  </button>
-  <p class="text-sm text-gray-500">
-    Auth Code: <span>{authCode}</span>
-  </p>
-</div>
+{#if !isAuthenticated}
+  <div class="w-full h-screen flex flex-col items-center gap-4 justify-start p-4 mt-16">
+    <button class="bg-blue-500 text-white px-4 py-2 rounded-md" on:click={authenticate}>
+      Login
+    </button>
+    <button class="bg-blue-500 text-white px-4 py-2 rounded-md" on:click={copyAuthCode}>
+      Copy Auth Code
+    </button>
+    <p class="text-sm text-gray-500">
+      Auth Code: <span>{authCode}</span>
+    </p>
+  </div>
+{/if}
 
 <main class="min-h-screen bg-gray-100 flex items-center justify-center px-4">
   {#if isAuthenticated}
