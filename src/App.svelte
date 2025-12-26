@@ -5,6 +5,7 @@
   let authCode = '';
   let myApi; // يمسك كائن my القادم من hylid-bridge
   let isAuthenticated = false; // حالة التحقق
+  let paymentToken = '';       // توكن الدفع القادم من السيرفر
 
   onMount(async () => {
     // تحميل السكربت الخارجي ديناميكياً مرة واحدة
@@ -47,8 +48,11 @@
           })
         })
           .then(res => res.json())
-          .then(() => {
+          .then((data) => {
+            // نتوقع من الـ API يرجع توكن أو شيء مشابه
+            paymentToken = data?.token || '';
             isAuthenticated = true; // تم تسجيل الدخول بنجاح
+
             myApi.alert({
               content: 'Login successful'
             });
@@ -95,7 +99,7 @@
 
 <main class="min-h-screen bg-gray-100 flex items-center justify-center px-4">
   {#if isAuthenticated}
-    <Pay />
+    <Pay token={paymentToken} />
   {:else}
     <p class="text-gray-600 text-center">
       يرجى تسجيل الدخول أولاً لرؤية صفحة الدفع.
