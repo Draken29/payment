@@ -52,10 +52,6 @@
             // نتوقع من الـ API يرجع توكن أو شيء مشابه
             paymentToken = data?.token || '';
             isAuthenticated = true; // تم تسجيل الدخول بنجاح
-
-            myApi.alert({
-              content: 'Login successful'
-            });
           })
           .catch(err => {
             let errorDetails = '';
